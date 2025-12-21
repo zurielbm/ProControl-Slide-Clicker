@@ -4,8 +4,11 @@ import requests
 app = Flask(__name__, static_folder='static', template_folder='static')
 
 # Default ProPresenter API base URL
-PROPRESENTER_IP = "0.0.0.0"
-PROPRESENTER_PORT = 1025
+import os
+
+# Default ProPresenter API base URL
+PROPRESENTER_IP = os.environ.get('PROPRESENTER_IP', "0.0.0.0")
+PROPRESENTER_PORT = os.environ.get('PROPRESENTER_PORT', 1025)
 
 FLASK_PORT = 80
 

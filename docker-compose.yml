@@ -4,9 +4,11 @@ services:
   propresenter-viewer:
     build: .
     ports:
-      - "8080:80"
+      - "${PUBLIC_WEB_PORT:-8080}:80"
     container_name: propresenter-slide-viewer
     restart: unless-stopped
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=80 
+      - PROPRESENTER_IP=${PROPRESENTER_IP:-0.0.0.0}
+      - PROPRESENTER_PORT=${PROPRESENTER_PORT:-1025} 
