@@ -5,14 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProControl</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
                     colors: {
-                        primary: {
+                        brand: {
                             50: '#fff7ed',
                             100: '#ffedd5',
                             200: '#fed7aa',
@@ -24,281 +33,234 @@
                             800: '#9a3412',
                             900: '#7c2d12',
                             950: '#431407',
+                        },
+                        zinc: {
+                            950: '#09090b',
                         }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
                     }
                 }
             }
         }
     </script>
     <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
+        .utility-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 40px -4px rgba(0, 0, 0, 0.04);
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
+        .dark .utility-card {
+            background: rgba(9, 9, 11, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
         }
 
-        .pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .selection-glow {
+            transition: all 0.3s ease;
+        }
+
+        .selection-glow:hover {
+            border-color: rgba(249, 115, 22, 0.4);
+            box-shadow: 0 0 40px -10px rgba(249, 115, 22, 0.15);
         }
     </style>
 </head>
 
 <body
-    class="bg-gray-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-500 overflow-x-hidden selection:bg-brand-500 selection:text-white flex flex-col p-4">
+    class="bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col font-sans selection:bg-orange-500/30">
 
-
-    <div class="max-w-2xl mx-auto text-center fade-in">
-        <!-- Logo/Icon -->
-        <div class="mb-8">
-            <div
-                class="w-20 h-20 mx-auto bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                    </path>
-                </svg>
-            </div>
-        </div>
-
-        <!-- Title -->
-        <h1 class="text-4xl md:text-6xl font-bold text-primary-600 dark:text-primary-400 mb-4">
-            ProControl
-        </h1>
-        <h2 class="text-2xl md:text-3xl font-semibold text-gray-700 dark:text-gray-300 mb-6">
-            Slide Clicker
-        </h2>
-
-        <!-- Description -->
-        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-            Control and view your ProPresenter slides remotely with this web-based interface.
-        </p>
-
-        <!-- Version Selection -->
-        <div
-            class="bg-white/50 dark:bg-slate-900/50 rounded-2xl shadow-xl p-8 border border-slate-200 dark:border-slate-700 mb-8">
-            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-6">Choose Your Version</h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Standalone Version -->
-                <div class="group">
-                    <a href="standalone.html"
-                        class="block p-6 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl border-2 border-primary-200 dark:border-primary-700 hover:border-primary-400 dark:hover:border-primary-500 transition-all duration-300 hover:shadow-lg transform hover:scale-105">
-                        <div class="flex items-center justify-center mb-4">
-                            <div class="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <h4 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-2">Standalone</h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Direct connection to ProPresenter. Configure IP and port manually.
-                        </p>
-                        <div
-                            class="mt-4 flex items-center justify-center text-primary-600 dark:text-primary-400 group-hover:text-primary-700 dark:group-hover:text-primary-300">
-                            <span class="text-sm font-medium">Launch Standalone</span>
-                            <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Server Version -->
-                <div class="group">
-                    <a href="static/index.html"
-                        class="block p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border-2 border-green-200 dark:border-green-700 hover:border-green-400 dark:hover:border-green-500 transition-all duration-300 hover:shadow-lg transform hover:scale-105">
-                        <div class="flex items-center justify-center mb-4">
-                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01">
-                                    </path>
-                                </svg>
-                            </div>
-                        </div>
-                        <h4 class="text-lg font-semibold text-green-700 dark:text-green-300 mb-2">Docker Server Version
-                        </h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Full-featured version with server backend. REQUIRES SERVER
-                            <span id="serverStatusBadge"
-                                class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 ml-2 hidden">
-                                Checking...
-                            </span>
-                        </p>
-                        <div
-                            class="mt-4 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300">
-                            <span class="text-sm font-medium">Launch Server Version</span>
-                            <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Features -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="text-center">
-                <div
-                    class="w-12 h-12 mx-auto bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-3">
-                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                        </path>
-                    </svg>
-                </div>
-                <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Live Preview</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400">View current and next slides in real-time</p>
-            </div>
-
-            <div class="text-center">
-                <div
-                    class="w-12 h-12 mx-auto bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-3">
-                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
-                <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Remote Control</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Control slides from any device on your network</p>
-            </div>
-
-            <div class="text-center">
-                <div
-                    class="w-12 h-12 mx-auto bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-3">
-                    <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <h4 class="font-semibold text-gray-800 dark:text-white mb-2">Easy Setup</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Quick configuration with ProPresenter's API</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="text-center">
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-                ProControl Slide Clicker: A Third-Party Remote for ProPresenter.
-            </p>
-        </div>
-    </div>
-
-    <!-- Theme toggle button -->
+    <!-- Theme Toggle -->
     <button onclick="toggleTheme()"
-        class="fixed top-4 right-4 p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700">
-        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-gray-600 dark:text-gray-300" fill="currentColor"
-            viewBox="0 0 20 20">
+        class="fixed top-6 right-6 p-2 rounded-lg utility-card hover:bg-black/5 dark:hover:bg-white/5 transition-colors z-50">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-zinc-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
         </svg>
-        <svg id="theme-toggle-light-icon" class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="currentColor"
-            viewBox="0 0 20 20">
+        <svg id="theme-toggle-light-icon" class="w-5 h-5 text-zinc-500" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"
                 d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
                 clip-rule="evenodd"></path>
         </svg>
     </button>
 
+    <main class="flex-grow flex flex-col items-center justify-center p-6 max-w-4xl mx-auto w-full">
+
+        <!-- Hero Section -->
+        <div class="text-center mb-16 animate-fade-in">
+            <div class="mb-8 flex justify-center">
+                <div
+                    class="w-20 h-20 rounded-2xl bg-orange-600 flex items-center justify-center shadow-2xl shadow-orange-950/40 transform hover:rotate-3 transition-transform">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter mb-4 text-zinc-900 dark:text-zinc-50">
+                PRO<span class="text-orange-600">CONTROL</span>
+            </h1>
+            <p
+                class="text-zinc-500 dark:text-zinc-400 font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] mb-6">
+                Redefining the Presentation Stage
+            </p>
+            <p class="max-w-xl mx-auto text-zinc-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
+                A minimalist, high-precision remote interface for ProPresenter. Choose your experience below.
+            </p>
+        </div>
+
+        <!-- Version Selection -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full animate-slide-up">
+
+            <!-- Standalone -->
+            <a href="standalone.html"
+                class="utility-card p-8 rounded-2xl selection-glow group flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2.5 rounded bg-orange-600/10 text-orange-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold uppercase tracking-widest text-zinc-800 dark:text-zinc-100">
+                            Standalone</h2>
+                    </div>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-8">
+                        The ultimate clean remote. Connects directly to ProPresenter's API from your browser. Ideal for
+                        quick setups and guest speakers.
+                    </p>
+                </div>
+                <div
+                    class="flex items-center text-xs font-bold uppercase tracking-widest text-orange-600 group-hover:gap-2 transition-all">
+                    Launch Direct
+                    <svg class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Server Version -->
+            <a href="static/index.html"
+                class="utility-card p-8 rounded-2xl selection-glow group flex flex-col justify-between h-full">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 rounded bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                            </div>
+                            <h2 class="text-lg font-bold uppercase tracking-widest text-zinc-800 dark:text-zinc-100">
+                                Server Backend</h2>
+                        </div>
+                        <span id="serverStatusBadge"
+                            class="text-[8px] font-black px-2 py-0.5 rounded border border-zinc-800 dark:border-zinc-200 hidden"></span>
+                    </div>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-8">
+                        Enhanced reliability with a proxy server. Provides a persistent connection and optimized
+                        thumbnail delivery via Docker.
+                    </p>
+                </div>
+                <div
+                    class="flex items-center text-xs font-bold uppercase tracking-widest text-zinc-900 dark:text-white group-hover:gap-2 transition-all">
+                    Access Server
+                    <svg class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Features Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 w-full animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="flex flex-col items-center">
+                <div class="text-[9px] font-bold text-orange-600 uppercase tracking-[0.4em] mb-2">Live</div>
+                <p class="text-[11px] text-zinc-500 text-center uppercase tracking-widest leading-relaxed">Real-time
+                    thumbnails & slide notes</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="text-[9px] font-bold text-orange-600 uppercase tracking-[0.4em] mb-2">Remote</div>
+                <p class="text-[11px] text-zinc-500 text-center uppercase tracking-widest leading-relaxed">Wireless
+                    stage control from any device</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="text-[9px] font-bold text-orange-600 uppercase tracking-[0.4em] mb-2">Setup</div>
+                <p class="text-[11px] text-zinc-500 text-center uppercase tracking-widest leading-relaxed">Immediate
+                    ProPresenter API integration</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="p-8 text-center animate-fade-in" style="animation-delay: 0.5s;">
+        <p class="text-[9px] font-medium text-zinc-500 uppercase tracking-[0.3em]">
+            &copy; 2025 ProControl &bull;
+        </p>
+    </footer>
+
     <script>
-        // Theme toggle functionality
         function toggleTheme() {
             const html = document.documentElement;
             const isDark = html.classList.contains('dark');
-
-            if (isDark) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
-            }
+            html.classList.toggle('dark', !isDark);
+            localStorage.setItem('theme', !isDark ? 'dark' : 'light');
+            updateIcons();
         }
 
-        // Initialize theme on page load
+        function updateIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('theme-toggle-dark-icon').classList.toggle('hidden', isDark);
+            document.getElementById('theme-toggle-light-icon').classList.toggle('hidden', !isDark);
+        }
+
         function initializeTheme() {
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-
-            if (shouldBeDark) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
-            }
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark' || (!savedTheme && prefersDark));
+            updateIcons();
         }
 
-        // Auto-redirect logic (optional)
-        function checkForServer() {
+        function checkServer() {
             const badge = document.getElementById('serverStatusBadge');
-            if (badge) badge.classList.remove('hidden');
-
             fetch('/health')
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Server detected');
-                        if (badge) {
-                            badge.textContent = 'ONLINE';
-                            badge.className = 'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 ml-2';
-                        }
+                .then(res => {
+                    badge.classList.remove('hidden');
+                    if (res.ok) {
+                        badge.textContent = 'SYSTEM ONLINE';
+                        badge.classList.add('text-green-600', 'border-green-600/30');
                     } else {
-                        throw new Error('Server error');
+                        badge.textContent = 'SYSTEM ERROR';
+                        badge.classList.add('text-red-500', 'border-red-500/30');
                     }
                 })
                 .catch(() => {
-                    console.log('No server detected');
-                    if (badge) {
-                        badge.textContent = 'OFFLINE';
-                        badge.className = 'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 ml-2';
-                    }
+                    badge.classList.remove('hidden');
+                    badge.textContent = 'SERVER OFFLINE';
+                    badge.classList.add('text-zinc-500', 'border-zinc-500/30');
                 });
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             initializeTheme();
-            checkForServer();
+            checkServer();
         });
     </script>
 </body>

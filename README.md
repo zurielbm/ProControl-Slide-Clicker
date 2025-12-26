@@ -69,7 +69,24 @@ This project is a simple web-based application designed to act as a remote viewe
 
 For easier hosting, especially if you need to access the application from mobile devices, a Docker setup is provided.
 
-1.  **Build and Run:**  🏗️
+1.  **Configure Environment Variables:**  🔧
+
+    -   Copy `example.env` to `.env` and configure the following variables:
+        
+        ```bash
+        cp example.env .env
+        ```
+
+    | Variable | Description | Default |
+    |----------|-------------|---------|
+    | `PROPRESENTER_IP` | The IP address of your ProPresenter machine | `0.0.0.0` |
+    | `PROPRESENTER_PORT` | The API port for ProPresenter | `1025` |
+    | `PUBLIC_WEB_PORT` | The port where the web application will be accessible | `8080` |
+
+    > [!TIP]
+    > Set `PROPRESENTER_IP` to the local IP of your ProPresenter machine (e.g., `192.168.1.100`). Use `PUBLIC_WEB_PORT` to change the default port if `8080` is already in use.
+
+2.  **Build and Run:**  🏗️
     
     -   **Navigate to the root of your project folder**  (where your  `index.html`  and  `Dockerfile`  are located).
         
@@ -80,13 +97,13 @@ For easier hosting, especially if you need to access the application from mobile
         
         ```
         
-    -   By default, the application will be accessible at  `http://localhost:8080`.
+    -   By default, the application will be accessible at  `http://localhost:8080`  (or the port specified in `PUBLIC_WEB_PORT`).
         
-2.  **Access from Mobile Devices:**  📲
+3.  **Access from Mobile Devices:**  📲
     
     -   Once the Docker container is running, you can access the application from mobile devices on the same local network by navigating to  `http://[IP_OF_HOST_PC]:8080`  in your mobile browser. Replace  `[IP_OF_HOST_PC]`  with the actual local IP address of the computer running the Docker container.
         
-3.  **Shut Down:**  🛑
+4.  **Shut Down:**  🛑
     
     -   To stop and remove the Docker containers, use:
         

@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProControl - Standalone</title>
+    <title>Remote - ProPresenter Control</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -16,6 +18,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
                         brand: {
@@ -30,27 +33,28 @@
                             800: '#9a3412',
                             900: '#7c2d12',
                             950: '#431407',
+                        },
+                        zinc: {
+                            950: '#09090b',
                         }
                     },
                     animation: {
-                        'blob': 'blob 7s infinite',
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'pulse-subtle': 'pulseSubtle 2s infinite',
                     },
                     keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' },
                         },
                         slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        pulseSubtle: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.7' },
                         }
                     }
                 }
@@ -60,36 +64,25 @@
     <style>
         body {
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+        .utility-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 40px -4px rgba(0, 0, 0, 0.04);
         }
 
-        .dark .glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        .dark .utility-card {
+            background: rgba(9, 9, 11, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        .dark .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Custom Scrollbar */
+        /* Custom Scrollbar for a cleaner look */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         ::-webkit-scrollbar-track {
@@ -97,269 +90,215 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
         }
 
         .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Smooth transition for loading states */
+        #slideThumbnail,
+        #nextSlideThumbnail {
+            transition: opacity 0.15s ease-out;
         }
     </style>
 </head>
 
 <body
-    class="bg-gray-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-500 overflow-x-hidden selection:bg-brand-500 selection:text-white flex flex-col">
+    class="bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col font-sans selection:bg-orange-500/30 selection:text-orange-200">
 
-    <!-- Ambient Background -->
-    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div
-            class="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob dark:bg-brand-500/10">
-        </div>
-        <div
-            class="absolute top-0 right-1/4 w-96 h-96 bg-yellow-500/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 dark:bg-yellow-500/10">
-        </div>
-        <div
-            class="absolute -bottom-32 left-1/3 w-96 h-96 bg-red-500/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-4000 dark:bg-red-500/10">
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div class="container mx-auto px-4 py-6 max-w-6xl flex-grow flex flex-col relative z-10">
-
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-8 animate-fade-in">
-            <div class="flex items-center gap-3">
-                <div
-                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-red-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                        </path>
-                    </svg>
-                </div>
-                <div>
+    <!-- Header -->
+    <header
+        class="border-b border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 h-10 sm:h-11 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="w-5 h-5 sm:w-6 sm:h-6 rounded bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-900/20">
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
                     <h1
-                        class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-400">
-                        ProControl
-                    </h1>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400 tracking-wider uppercase">Slide
-                        Clicker</p>
+                        class="text-[11px] sm:text-xs font-bold tracking-tight text-zinc-900 dark:text-zinc-100 uppercase">
+                        ProControl</h1>
+                </div>
+                <div class="h-3 w-[1px] bg-black/10 dark:bg-white/10 hidden sm:block"></div>
+                <div id="presentationName"
+                    class="text-[10px] sm:text-[11px] font-medium text-zinc-500 truncate max-w-[120px] sm:max-w-[150px] uppercase tracking-wider">
+                    Connecting...
                 </div>
             </div>
 
-            <button onclick="toggleTheme()"
-                class="p-2.5 rounded-xl glass-panel hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all duration-300 group">
-                <svg id="theme-toggle-dark-icon"
-                    class="hidden w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:rotate-12 transition-transform"
-                    fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                </svg>
-                <svg id="theme-toggle-light-icon"
-                    class="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:rotate-90 transition-transform"
-                    fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                        clip-rule="evenodd"></path>
-                </svg>
-            </button>
-        </header>
-
-        <!-- Status Bar -->
-        <div class="mb-8 text-center animate-slide-up">
-            <div id="presentationName"
-                class="inline-flex items-center px-4 py-1.5 rounded-full glass-panel text-sm font-medium text-brand-600 dark:text-brand-300 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-brand-500 mr-2 animate-pulse"></span>
-                Connecting...
-            </div>
-            <div id="error"
-                class="mt-2 text-sm text-red-500 dark:text-red-400 font-medium opacity-0 transition-opacity duration-300 h-5">
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-
-            <!-- Current Slide -->
-            <div class="glass-panel rounded-2xl p-1 shadow-xl animate-slide-up" style="animation-delay: 0.1s;">
-                <div class="bg-white/50 dark:bg-slate-900/50 rounded-xl p-5 h-full flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-2">
-                            <span class="flex h-3 w-3 relative">
-                                <span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                            </span>
-                            <h2 class="text-lg font-bold text-slate-800 dark:text-white">Current Slide</h2>
-                        </div>
-                        <span
-                            class="text-xs font-mono text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">LIVE</span>
-                    </div>
-
-                    <div id="currentSlideText" class="flex-1 relative group">
-                        <div class="flex flex-col gap-4 h-full">
-                            <div
-                                class="relative w-full aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-inner">
-                                <img id="slideThumbnail"
-                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    src="" alt="Current Slide" style="display: none;">
-                                <div id="loadingSkeleton"
-                                    class="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800 animate-pulse">
-                                    <svg class="w-10 h-10 text-slate-300 dark:text-slate-600" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <p
-                                    class="content text-base md:text-lg text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
-                                    Waiting for content...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="currentSlideNotes"
-                        class="mt-4 text-sm text-slate-500 dark:text-slate-400 italic border-t border-slate-200 dark:border-slate-700/50 pt-3 empty:hidden">
-                    </div>
+            <div class="flex items-center gap-2.5">
+                <div id="digitalClock"
+                    class="text-[11px] sm:text-xs font-mono text-zinc-600 dark:text-zinc-500 tabular-nums">00:00:00
                 </div>
-            </div>
-
-            <!-- Next Slide -->
-            <div class="glass-panel rounded-2xl p-1 shadow-xl animate-slide-up" style="animation-delay: 0.2s;">
-                <div class="bg-white/50 dark:bg-slate-900/50 rounded-xl p-5 h-full flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-brand-500"></span>
-                            <h2 class="text-lg font-bold text-slate-800 dark:text-white">Next Slide</h2>
-                        </div>
-                        <span
-                            class="text-xs font-mono text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">UP
-                            NEXT</span>
-                    </div>
-
-                    <div id="nextSlideText" class="flex-1 relative group">
-                        <div class="flex flex-col gap-4 h-full">
-                            <div
-                                class="relative w-full aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-inner opacity-80 group-hover:opacity-100 transition-opacity">
-                                <img id="nextSlideThumbnail"
-                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    src="" alt="Next Slide" style="display: none;">
-                                <div id="nextLoadingSkeleton"
-                                    class="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800 animate-pulse">
-                                    <svg class="w-10 h-10 text-slate-300 dark:text-slate-600" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <p
-                                    class="content text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    Waiting for content...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="nextSlideNotes"
-                        class="mt-4 text-sm text-slate-500 dark:text-slate-400 italic border-t border-slate-200 dark:border-slate-700/50 pt-3 empty:hidden">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="grid grid-cols-2 gap-6 mb-12 animate-slide-up" style="animation-delay: 0.3s;">
-            <button onclick="handlePrevious()"
-                class="group relative overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800 p-1 shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-slate-300 to-slate-200 dark:from-slate-700 dark:to-slate-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="relative flex items-center justify-center gap-3 py-4 rounded-xl bg-slate-100 dark:bg-slate-900/80 group-hover:bg-transparent transition-colors">
-                    <svg class="w-6 h-6 text-slate-700 dark:text-slate-200 transition-transform group-hover:-translate-x-1"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7">
-                        </path>
+                <button onclick="toggleTheme()"
+                    class="p-1 px-2 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-zinc-500 dark:text-zinc-600"
+                    title="Toggle Theme">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                     </svg>
-                    <span class="text-lg font-bold text-slate-700 dark:text-slate-200">Previous</span>
+                    <svg id="theme-toggle-light-icon" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto w-full px-3 py-2 sm:py-3 flex flex-col gap-2 sm:gap-3 pb-24 sm:pb-3">
+
+        <!-- Error Bar (Compact) -->
+        <div id="error"
+            class="text-[10px] font-medium text-red-600 dark:text-red-400 bg-red-400/10 border border-red-400/20 px-2 py-1 rounded opacity-0 transition-opacity h-6 flex items-center">
+        </div>
+
+        <!-- Previews Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 flex-grow content-start sm:content-stretch">
+
+            <!-- Current Slide Section -->
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-1.5 px-0.5">
+                    <span class="w-1 h-1 rounded-full bg-emerald-500"></span>
+                    <span
+                        class="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-500">Live</span>
                 </div>
+
+                <div
+                    class="utility-card rounded-lg flex flex-col group border-zinc-200 dark:border-zinc-900 bg-white/50 dark:bg-zinc-900/20 overflow-hidden">
+                    <div
+                        class="relative aspect-video bg-zinc-200/50 dark:bg-zinc-950/50 border-b border-black/5 dark:border-white/5 overflow-hidden">
+                        <img id="slideThumbnail" class="w-full h-full object-cover" src="" alt="Current Slide"
+                            style="display: none;">
+                        <div id="loadingSkeleton"
+                            class="absolute inset-0 flex items-center justify-center bg-zinc-200/50 dark:bg-zinc-950/20 animate-pulse">
+                            <div
+                                class="w-5 h-5 rounded-full border border-black/5 dark:border-white/5 border-t-orange-500 animate-spin">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-zinc-50/50 dark:bg-zinc-950/20">
+                        <div id="currentSlideText"
+                            class="text-[13px] sm:text-[14px] font-medium text-zinc-900 dark:text-zinc-100 leading-tight sm:leading-snug content tracking-tight">
+                            Waiting...
+                        </div>
+                        <div id="currentSlideNotes"
+                            class="mt-1.5 text-[10px] text-zinc-600 dark:text-zinc-500 italic border-t border-black/5 dark:border-white/5 pt-1.5 empty:hidden leading-relaxed">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Slide Section -->
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-1.5 px-0.5">
+                    <span class="w-1 h-1 rounded-full bg-zinc-600"></span>
+                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-600">Up
+                        Next</span>
+                </div>
+
+                <div
+                    class="utility-card rounded-lg flex flex-col group border-zinc-200 dark:border-zinc-900 bg-white/30 dark:bg-zinc-900/10 opacity-90 overflow-hidden">
+                    <div
+                        class="relative aspect-video bg-zinc-200/50 dark:bg-zinc-950/50 border-b border-black/5 dark:border-white/5 overflow-hidden">
+                        <img id="nextSlideThumbnail" class="w-full h-full object-cover" src="" alt="Next Slide"
+                            style="display: none;">
+                        <div id="nextLoadingSkeleton"
+                            class="absolute inset-0 flex items-center justify-center bg-zinc-200/50 dark:bg-zinc-950/20 animate-pulse">
+                            <div
+                                class="w-5 h-5 rounded-full border border-black/5 dark:border-white/5 border-t-zinc-400 dark:border-t-zinc-800 animate-spin">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-zinc-50/50 dark:bg-zinc-950/20">
+                        <div id="nextSlideText"
+                            class="text-[13px] sm:text-[14px] font-medium text-zinc-600 dark:text-zinc-500 leading-tight sm:leading-snug content tracking-tight">
+                            Waiting...
+                        </div>
+                        <div id="nextSlideNotes"
+                            class="mt-1.5 text-[10px] text-zinc-500 dark:text-zinc-600 italic border-t border-black/5 dark:border-white/5 pt-1.5 empty:hidden leading-relaxed">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Fixed Bottom Controls (Mobile Primary) -->
+    <div
+        class="fixed bottom-0 left-0 right-0 p-3 sm:p-0 sm:relative sm:bg-transparent bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur-xl border-t border-black/5 dark:border-white/5 sm:border-none z-[60]">
+        <div class="max-w-5xl mx-auto grid grid-cols-4 gap-2 sm:gap-3 sm:px-4 sm:pb-4">
+            <button onclick="handlePrevious()"
+                class="col-span-1 flex flex-col items-center justify-center gap-1 py-3 rounded bg-zinc-200 dark:bg-zinc-900 border border-black/5 dark:border-white/5 hover:bg-zinc-300 dark:hover:bg-zinc-800 active:bg-zinc-400 dark:active:bg-zinc-700 transition-all group">
+                <svg class="w-4 h-4 text-zinc-600 dark:text-zinc-500 group-hover:text-zinc-800 dark:group-hover:text-zinc-300"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span
+                    class="text-[8px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-600 hidden sm:block">Back</span>
             </button>
 
             <button onclick="handleNext()" id="nextSlideBtn"
-                class="group relative overflow-hidden rounded-2xl bg-brand-600 p-1 shadow-lg shadow-brand-500/30 transition-all hover:shadow-xl hover:shadow-brand-500/40 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale disabled:hover:translate-y-0 disabled:shadow-none">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-brand-500 to-red-600 opacity-100 transition-opacity duration-300">
-                </div>
-                <div class="relative flex items-center justify-center gap-3 py-4 rounded-xl bg-transparent">
-                    <span class="text-lg font-bold text-white">Next Slide</span>
-                    <svg class="w-6 h-6 text-white transition-transform group-hover:translate-x-1" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
+                class="col-span-3 flex items-center justify-center gap-3 py-3 rounded bg-orange-600 border border-orange-500/30 hover:bg-orange-500 active:bg-orange-400 transition-all group shadow-lg shadow-orange-950/20 disabled:opacity-20 disabled:grayscale disabled:shadow-none">
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-white">Next Slide</span>
+                <svg class="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
             </button>
         </div>
+    </div>
 
-        <!-- Settings Toggle -->
-        <div class="mt-auto">
-            <details class="group glass-panel rounded-xl overflow-hidden transition-all duration-300 open:shadow-2xl">
-                <summary
-                    class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-white/30 dark:hover:bg-slate-800/30 transition-colors">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                        </div>
-                        <span class="font-medium text-slate-700 dark:text-slate-200">Connection Settings</span>
-                    </div>
-                    <svg class="w-5 h-5 text-slate-500 transition-transform group-open:rotate-180" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    <!-- Settings (Bottom Drawer, pushed up by sticky controls on mobile) -->
+    <footer class="mt-auto border-t border-black/5 dark:border-white/5 bg-zinc-50 dark:bg-zinc-950 pb-20 sm:pb-0">
+        <details class="group">
+            <summary
+                class="flex items-center justify-between px-5 py-2 cursor-pointer list-none hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     </svg>
-                </summary>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-zinc-600">Settings</span>
+                </div>
+                <svg class="w-3.5 h-3.5 text-zinc-800 transition-transform group-open:rotate-180" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </summary>
 
-                <div class="p-6 border-t border-slate-200 dark:border-slate-700/50 bg-white/30 dark:bg-slate-900/30">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="space-y-2">
-                            <label
-                                class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">IP
-                                Address</label>
-                            <input type="text" id="ipInput" placeholder="192.168.1.100"
-                                class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white placeholder-slate-400 transition-all">
-                        </div>
-                        <div class="space-y-2">
-                            <label
-                                class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Port</label>
-                            <input type="text" id="portInput" placeholder="1025"
-                                class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent text-slate-900 dark:text-white placeholder-slate-400 transition-all">
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="updateBaseUrl()"
-                                class="w-full px-6 py-2.5 bg-slate-800 hover:bg-slate-700 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded-lg shadow transition-all font-medium flex items-center justify-center gap-2">
-                                <span>Update Connection</span>
-                            </button>
-                        </div>
+            <div class="px-5 py-4 bg-zinc-50 dark:bg-zinc-950 border-t border-black/5 dark:border-white/5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto">
+                    <div class="space-y-1">
+                        <label
+                            class="text-[8px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-700 ml-0.5">IP</label>
+                        <input type="text" id="ipInput" placeholder="192.168.1.100"
+                            class="w-full px-2.5 py-1.5 bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/5 rounded outline-none text-[11px] font-mono text-zinc-800 dark:text-zinc-300 placeholder-zinc-400 dark:placeholder-zinc-800 focus:border-orange-500/50 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label
+                            class="text-[8px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-700 ml-0.5">Port</label>
+                        <input type="text" id="portInput" placeholder="1025"
+                            class="w-full px-2.5 py-1.5 bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/5 rounded outline-none text-[11px] font-mono text-zinc-800 dark:text-zinc-300 placeholder-zinc-400 dark:placeholder-zinc-800 focus:border-orange-500/50 transition-all">
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="updateBaseUrl()"
+                            class="w-full py-1.5 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-zinc-100 dark:text-zinc-950 text-[9px] font-bold uppercase tracking-widest rounded transition-all">
+                            Save
+                        </button>
                     </div>
                 </div>
-            </details>
-        </div>
-        <div class="mt-8 text-center">
-            <p class="text-xs text-slate-400 dark:text-slate-600">
-                ProControl Slide Clicker: A Third-Party Remote for ProPresenter.
-            </p>
-        </div>
-    </div>
+            </div>
+        </details>
+    </footer>
 
     <script>
         let baseUrl = localStorage.getItem('baseUrl') || 'http://192.168.50.81:1025';
@@ -368,21 +307,39 @@
         let slideStatus = null;
         let errorTimeout = null;
 
+        // Clock logic
+        function updateClock() {
+            const now = new Date();
+            const clockElement = document.getElementById('digitalClock');
+            if (clockElement) {
+                clockElement.textContent = now.toLocaleTimeString('en-US', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
         // Theme toggle functionality
         function toggleTheme() {
             const html = document.documentElement;
             const isDark = html.classList.contains('dark');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
 
             if (isDark) {
                 html.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
-                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
+                darkIcon?.classList.remove('hidden');
+                lightIcon?.classList.add('hidden');
             } else {
                 html.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
-                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
+                darkIcon?.classList.add('hidden');
+                lightIcon?.classList.remove('hidden');
             }
         }
 
@@ -392,14 +349,17 @@
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
 
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+
             if (shouldBeDark) {
                 document.documentElement.classList.add('dark');
-                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
+                darkIcon?.classList.add('hidden');
+                lightIcon?.classList.remove('hidden');
             } else {
                 document.documentElement.classList.remove('dark');
-                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
-                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
+                darkIcon?.classList.remove('hidden');
+                lightIcon?.classList.add('hidden');
             }
         }
 
@@ -428,10 +388,6 @@
                 const newBaseUrl = `http://${ip}:${port}`;
                 baseUrl = newBaseUrl;
                 localStorage.setItem('baseUrl', newBaseUrl);
-
-                // Clear the input fields
-                ipInput.value = '';
-                portInput.value = '';
 
                 // Refresh the data with the new URL
                 fetchActivePresentation();
@@ -463,9 +419,9 @@
                 if (!response.ok) throw new Error('Failed to fetch slide status');
                 const data = await response.json();
                 slideStatus = data;
+                // Fetch thumbnails FIRST, then update text (so everything updates in sync)
+                await Promise.all([fetchSlideThumbnail(), fetchNextSlideThumbnail()]);
                 updateSlideDisplay();
-                await fetchSlideThumbnail();
-                await fetchNextSlideThumbnail();
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch slide status');
             }
@@ -504,14 +460,23 @@
             if (slideStatus) {
                 const currentTextElement = document.getElementById('currentSlideText');
                 const nextTextElement = document.getElementById('nextSlideText');
-                const currentContentSpan = currentTextElement.querySelector('.content');
-                const nextContentSpan = nextTextElement.querySelector('.content');
 
-                currentContentSpan.textContent = slideStatus.current?.text || 'No content available';
-                nextContentSpan.textContent = slideStatus.next?.text || 'No content available';
+                if (currentTextElement) {
+                    currentTextElement.textContent = slideStatus.current?.text || 'No content available';
+                }
+                if (nextTextElement) {
+                    nextTextElement.textContent = slideStatus.next?.text || 'No content available';
+                }
 
-                document.getElementById('currentSlideNotes').textContent = slideStatus.current?.notes ? `Notes: ${slideStatus.current.notes}` : '';
-                document.getElementById('nextSlideNotes').textContent = slideStatus.next?.notes ? `Notes: ${slideStatus.next.notes}` : '';
+                const currentNotesElement = document.getElementById('currentSlideNotes');
+                const nextNotesElement = document.getElementById('nextSlideNotes');
+                if (currentNotesElement) {
+                    currentNotesElement.textContent = slideStatus.current?.notes ? `Notes: ${slideStatus.current.notes}` : '';
+                }
+                if (nextNotesElement) {
+                    nextNotesElement.textContent = slideStatus.next?.notes ? `Notes: ${slideStatus.next.notes}` : '';
+                }
+
 
                 document.getElementById('loadingSkeleton').classList.add('hidden');
                 document.getElementById('nextLoadingSkeleton').classList.add('hidden');
@@ -520,7 +485,11 @@
 
         async function handlePrevious() {
             try {
+                // Immediate visual feedback - show loading on BOTH thumbnails
                 document.getElementById('loadingSkeleton').classList.remove('hidden');
+                document.getElementById('nextLoadingSkeleton').classList.remove('hidden');
+                document.getElementById('slideThumbnail').style.opacity = '0.3';
+                document.getElementById('nextSlideThumbnail').style.opacity = '0.3';
 
                 const response = await fetch(`${baseUrl}/v1/presentation/active/previous/trigger`, {
                     method: 'GET'
@@ -533,27 +502,48 @@
                 if (currentSlide > 0) {
                     currentSlide--;
                     await fetchSlideStatus();
-                    await fetchActivePresentation(); // Ensure activePresentation is updated
+                    await fetchActivePresentation();
                 }
+
+                // Restore opacity after load
+                document.getElementById('slideThumbnail').style.opacity = '1';
+                document.getElementById('nextSlideThumbnail').style.opacity = '1';
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to trigger previous slide');
                 document.getElementById('loadingSkeleton').classList.add('hidden');
+                document.getElementById('nextLoadingSkeleton').classList.add('hidden');
+                document.getElementById('slideThumbnail').style.opacity = '1';
+                document.getElementById('nextSlideThumbnail').style.opacity = '1';
             }
         }
 
+
         async function handleNext() {
             try {
+                // Immediate visual feedback - show loading on BOTH thumbnails
+                document.getElementById('loadingSkeleton').classList.remove('hidden');
                 document.getElementById('nextLoadingSkeleton').classList.remove('hidden');
+                document.getElementById('slideThumbnail').style.opacity = '0.3';
+                document.getElementById('nextSlideThumbnail').style.opacity = '0.3';
+
                 const response = await fetch(`${baseUrl}/v1/presentation/active/next/trigger`, { method: 'GET' });
                 if (!response.ok) throw new Error('Failed to trigger next slide');
                 currentSlide++;
                 await fetchSlideStatus();
-                await fetchActivePresentation(); // Ensure activePresentation is updated
+                await fetchActivePresentation();
+
+                // Restore opacity after load
+                document.getElementById('slideThumbnail').style.opacity = '1';
+                document.getElementById('nextSlideThumbnail').style.opacity = '1';
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to trigger next slide');
+                document.getElementById('loadingSkeleton').classList.add('hidden');
                 document.getElementById('nextLoadingSkeleton').classList.add('hidden');
+                document.getElementById('slideThumbnail').style.opacity = '1';
+                document.getElementById('nextSlideThumbnail').style.opacity = '1';
             }
         }
+
 
         setInterval(async function () {
             try {
@@ -568,7 +558,6 @@
             try {
                 document.getElementById('loadingSkeleton').classList.remove('hidden'); // Show skeleton
                 const response = await fetch(`${baseUrl}/v1/presentation/${activePresentation.presentation.id.uuid}/thumbnail/${currentSlide}?quality=400`);
-                console.log(`${baseUrl}/v1/presentation/${activePresentation.presentation.id.uuid}/thumbnail/${currentSlide}?quality=400`);
                 if (!response.ok) throw new Error('Failed to fetch slide thumbnail');
                 const blob = await response.blob();
                 const url = URL.createObjectURL(blob);
