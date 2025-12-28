@@ -2,7 +2,11 @@ from flask import Flask, request, Response, send_from_directory
 import requests
 import os
 
-app = Flask(__name__, static_folder='static')
+# Get the directory where the script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
+app = Flask(__name__, static_folder=STATIC_DIR)
 
 # Default ProPresenter API base URL
 PROPRESENTER_IP = os.environ.get('PROPRESENTER_IP', "0.0.0.0")
