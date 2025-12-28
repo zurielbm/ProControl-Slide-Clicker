@@ -1,10 +1,8 @@
-from flask import Flask, request, Response,render_template
+from flask import Flask, request, Response, send_from_directory
 import requests
-
-app = Flask(__name__, static_folder='static', template_folder='static')
-
-# Default ProPresenter API base URL
 import os
+
+app = Flask(__name__, static_folder='static')
 
 # Default ProPresenter API base URL
 PROPRESENTER_IP = os.environ.get('PROPRESENTER_IP', "0.0.0.0")
@@ -17,7 +15,7 @@ def get_propresenter_base():
 
 @app.route('/')
 def root():
-    return render_template('index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/v1/<path:path>', methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def proxy(path):
