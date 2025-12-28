@@ -7,8 +7,6 @@ services:
       - "${PUBLIC_WEB_PORT:-8080}:80"
     container_name: propresenter-slide-viewer
     restart: unless-stopped
-    volumes:
-      - ./static:/app/static:ro
     environment:
       - NGINX_HOST=localhost
       - NGINX_PORT=80 

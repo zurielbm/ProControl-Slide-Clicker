@@ -16,15 +16,8 @@ def get_propresenter_base():
 @app.route('/')
 def root():
     # Serve the static index.html directly
-    static_path = '/app/static/index.html'
-    try:
-        with open(static_path, 'r') as f:
-            return Response(f.read(), mimetype='text/html')
-    except FileNotFoundError:
-        # Debug: show what files exist
-        import glob
-        files = glob.glob('/app/**/*', recursive=True)
-        return Response(f"File not found: {static_path}\n\nAvailable files:\n" + "\n".join(files), status=404, mimetype='text/plain')
+    with open('/app/static/index.html', 'r') as f:
+        return Response(f.read(), mimetype='text/html')
 
 @app.route('/v1/<path:path>', methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def proxy(path):
